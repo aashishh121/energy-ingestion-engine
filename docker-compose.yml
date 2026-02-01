@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: development
+    command: npm run start:dev
+    ports:
+      - "5100:5100"
+    environment:
+      - NODE_ENV=development
+      - PORT=5100
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=energy_db
+    depends_on:
+      - postgres
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - energy-network
+
+  postgres:
+    image: postgres:15
+    container_name: energy_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: energy_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - energy-network
+    restart: always
+
+volumes:
+  postgres_data:
+
+networks:
+  energy-network:
