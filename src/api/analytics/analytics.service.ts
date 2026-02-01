@@ -14,14 +14,14 @@ export class AnalyticsService {
   async performance(vehicleId: string) {
     const [row] = await this.repo.query(`
       SELECT
-        SUM(v.kwh_delivered_dc) AS dc_total,
-        SUM(m.kwh_consumed_ac) AS ac_total,
-        AVG(v.battery_temp) AS avg_temp,
-        SUM(v.kwh_delivered_dc) / NULLIF(SUM(m.kwh_consumed_ac), 0) AS efficiency
+        SUM(v."kwhDeliveredDc") AS dc_total,
+        SUM(m."kwhConsumedAc") AS ac_total,
+        AVG(v."batteryTemp") AS avg_temp,
+        SUM(v."kwhDeliveredDc") / NULLIF(SUM(m."kwhConsumedAc"), 0) AS efficiency
       FROM vehicle_telemetry_history v
-      JOIN vehicle_meter_map vmm ON vmm.vehicle_id = v.vehicle_id
-      JOIN meter_telemetry_history m ON m.meter_id = vmm.meter_id
-      WHERE v.vehicle_id = $1
+      JOIN vehicle_meter_map vmm ON vmm.vehicle_id = v."vehicleId"
+      JOIN meter_telemetry_history m ON m."meterId" = vmm.meter_id
+      WHERE v."vehicleId" = $1
         AND v.timestamp >= now() - interval '24 hours'
         AND m.timestamp >= now() - interval '24 hours'
     `, [vehicleId]);

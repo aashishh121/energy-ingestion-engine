@@ -6,12 +6,12 @@ export class VehicleMeterMap {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ name: 'vehicle_id' })
     vehicleId: string;
 
-    @Column()
+    @Column({ name: 'meter_id' })
     meterId: string;
 
-    @CreateDateColumn({ type: 'timestamptz' })
+    @CreateDateColumn({ type: 'timestamptz', name: 'assigned_at' })
     assignedAt: Date;
 }
